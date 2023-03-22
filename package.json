@@ -24,6 +24,7 @@
     "express-session": "^1.17.3",
     "morgan": "^1.10.0",
     "nunjucks": "^3.2.3",
+    "socket.io": "^4.6.1",
     "ws": "^8.13.0"
   },
   "devDependencies": {

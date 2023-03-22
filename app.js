@@ -22,12 +22,8 @@ nunjucks.configure('views',{
 });
 connect();
 
-app.use(morgan('dev'));
-app.use(express.static(path.join(__dirname,'public'))); // 스태틱 파일 경로를 설정함
-app.use(express.json());
-app.use(express.urlencoded({extended:false}));
-app.use(cookieParser(process.env.COOKIE_SECRET));
-app.use(session({
+
+const sessionMiddleware = session({
     // 모든 request마다 기존에 있던 session에 아무런 변경사항이 없을 시 그 session을 다시 저장하는 옵션
     resave: false,
     /*
@@ -35,13 +31,20 @@ app.use(session({
     true = 클라이언트 서버 방문 횟수에 따라 등급을 달리 하고 싶을 경우
     false = empty session obj의 쌓임 방지, 쿠키 사용 정책을 준수하기 위해
     */
-    saveUninitialized: false, 
+    saveUninitialized: false,
     secret: process.env.COOKIE_SECRET,
-    cookie: {
+    cookie : {
         httpOnly: true,
         secure: false,
     },
-}));
+});
+
+app.use(morgan('dev'));
+app.use(express.static(path.join(__dirname,'public'))); // 스태틱 파일 경로를 설정함
+app.use(express.json());
+app.use(express.urlencoded({extended:false}));
+app.use(cookieParser(process.env.COOKIE_SECRET));
+app.use(sessionMiddleware);
 
 app.use((req, res, next)=>{
     if(!req.session.color){
@@ -71,4 +74,4 @@ const server = app.listen(app.get('port'),()=>{
     console.log(app.get('port'),'번 포트에서 대기중');
 });
 
-webSocket(server, app);
+webSocket(server, app, sessionMiddleware);

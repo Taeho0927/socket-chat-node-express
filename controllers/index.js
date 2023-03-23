@@ -51,7 +51,7 @@ exports.enterRoom = async (req, res, next)=>{
         if (room.max <=(rooms.get(req.params.id) || { size: 0 }).size) {
             return res.redirect('/?error=허용 인원을 초과했습니다');
         }
-        const chats = await Chat.find({room: room._id}).sort('createdAt');
+        const chats = await Chat.find({room: room._id, to: ''}).sort('createdAt');
         return res.render('chat',{
             room,
             title: room.title,
@@ -79,10 +79,15 @@ exports.sendChat = async(req, res, next)=>{
         const chat = await Chat.create({
             room: req.params.id,
             user: req.session.color,
-            chat: req.body.chat
+            chat: req.body.chat,
+            to: req.body.to
         });
-        req.app.get('io').of('/chat').to(req.params.id).emit('chat',chat);
-        res.send('ok');
+        if(chat.to === ''){
+            req.app.get('io').of('/chat').to(req.params.id).emit('chat',chat);
+            res.send('ok');
+        } else{
+            req.app.get('io').of('/chat').to(chat.to).emit('whisper',chat);
+        }
     }catch(error){
         console.error(error);
         next(error);

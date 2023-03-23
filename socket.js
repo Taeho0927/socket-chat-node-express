@@ -19,6 +19,7 @@ module.exports = (server, app, sessionMiddleware)=>{
 
     chat.on('connection',(socket)=>{
         console.log('chat 네임스페이스에 접속');
+        console.log('클라이언트 소켓 아이디',socket.id);
         socket.on('join',(data)=>{
             socket.join(data);
             socket.to(data).emit('join',{

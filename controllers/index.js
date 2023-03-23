@@ -47,8 +47,8 @@ exports.enterRoom = async (req, res, next)=>{
             return res.redirect('/?error=비밀번호가 틀렸습니다.');
         }
         const io = req.app.get('io');
-        const { rooms } = io.of('/chat').adapter;
-        if (room.max <= rooms.get(req.params.max)?.size) {
+        const rooms = io.of("/chat").adapter.rooms;
+        if (room.max <=(rooms.get(req.params.id) || { size: 0 }).size) {
             return res.redirect('/?error=허용 인원을 초과했습니다');
         }
         const chats = await Chat.find({room: room._id}).sort('createdAt');

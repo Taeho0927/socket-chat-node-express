@@ -27,7 +27,7 @@ exports.createRoom = async (req, res, next)=>{
         const io = req.app.get('io');
         io.of('/room').emit('newRoom',newRoom);
         if (req.body.password) {
-            res.redirect(`/rooms/${newRoom._id}?password=${req.body.password}`);
+            res.redirect(`/room/${newRoom._id}?password=${req.body.password}`);
         } else{
             res.redirect(`/room/${newRoom._id}`);
         }

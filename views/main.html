@@ -76,12 +76,11 @@
             function addBtnEvent(e){
                 if(e.target.dataset.password === 'true'){
                     const password = prompt('비밀번호를 입력하세요');
-                    location.href = '/room/'+ e.target.dataset.id + '?password'+ password;
+                    location.href = '/room/'+ e.target.dataset.id + '?password='+ password;
                 }else{
                     location.href = '/room/'+ e.target.dataset.id;
                 }
             }
-
             document.querySelectorAll('.join-btn').forEach(function(btn){
                 btn.addEventListener('click', addBtnEvent);
             });

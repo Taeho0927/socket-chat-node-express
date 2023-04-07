@@ -24,7 +24,7 @@ module.exports = (server, app, sessionMiddleware)=>{
             socket.join(data);
             socket.to(data).emit('join',{
                 user: 'system',
-                chat: `${socket.request.session.color}님이 입장하셨습니다.`,
+                chat: `${socket.id}님이 입장하셨습니다.`,
             });
         });
 
